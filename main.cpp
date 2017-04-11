@@ -131,9 +131,9 @@ int inhx32(const char *filename, unsigned int lwm, unsigned int hwm)
 		line[1023]='\0';
 
 		/* strip CRLF */
-		n=(unsigned int)strlen(line)-1;
-		while(n>=0 && (line[n]=='\n' || line[n]=='\r'))
-			line[n--]='\0';
+		int nnn=strlen(line)-1;
+		while(nnn>=0 && (line[nnn]=='\n' || line[nnn]=='\r'))
+			line[nnn--]='\0';
 
 		/* validate line prefix and length */
 		if(line[0]!=':' || (strlen(line)&1)==0 || strlen(line)<11)
