@@ -257,14 +257,13 @@ int main(int argc, char** argv)
 
 	if (args.ispresent("-?") || args.ispresent("/?") || args.ispresent("?"))
 	{
-		printf("ihexdump V2.1\n\n");
+		printf("hex2bin V1.1\n\n");
 		printf("Usage:\n");
 		printf("ihexdump {src hex file} (out={dst bin file}) (lo={(0x)n}) (hi={(0x)n}) (raw)\n\n");
 		printf("  out=   : target filename (default = {source name}.bin\n");
 		printf("   lo=   : start address of range limit (default 0x1000)\n");
 		printf("   hi=   : end address of range limit (default 0x10000)\n");
 		printf("  raw    : do not write header\n");
-		printf("  crcall : file crc is for the entire file, not just 0x2000 bytes\n");
 		printf("\n");
 		return ERR_HELP;
 	}
