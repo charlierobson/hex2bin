@@ -241,7 +241,7 @@ int inhx32(const char *filename, unsigned int lwm, unsigned int hwm)
 
 	total_bytes = last - lwm;
 
-	printf("Decoded %08x -> %08x  (%08x = %dKB)\n", (unsigned int)first, (unsigned int)last, total_bytes, ((total_bytes + 1023) / 1024));
+	printf("Decoded %08x -> %08x  (Program bytes = %08x or %dKB, lo = 0x%x, hi = 0x%x)\n", (unsigned int)first, (unsigned int)last, total_bytes, ((total_bytes + 1023) / 1024), lwm, hwm);
 
 	return last;
 }
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
 		printf("Usage:\n");
 		printf("ihexdump {src hex file} (out={dst bin file}) (lo={(0x)n}) (hi={(0x)n}) (raw)\n\n");
 		printf("  out=   : target filename (default = {source name}.bin\n");
-		printf("   lo=   : start address of range limit (default 0)\n");
+		printf("   lo=   : start address of range limit (default 0x1000)\n");
 		printf("   hi=   : end address of range limit (default 0x10000)\n");
 		printf("  raw    : do not write header\n");
 		printf("  crcall : file crc is for the entire file, not just 0x2000 bytes\n");
@@ -271,7 +271,7 @@ int main(int argc, char** argv)
 
 	// desired memory address range - anything outside this is ignored
 	//
-	int lo = 0, hi = 0x10000;
+	int lo = 0x1000, hi = 0x10000;
 
 	std::string inName;
 	if (!args.getat(1, inName))
@@ -301,29 +301,28 @@ int main(int argc, char** argv)
 
 			if (!args.ispresent("raw"))
 			{
-				int crcLen = args.ispresent("crcall") ? finalLen : 0x2000;
-
-				if (crcLen > 0xffff)
-					error(ERR_CONVERSION, "data is >= 64k in size\n");
-
-				if (crcLen > finalLen)
-					error(ERR_CONVERSION, "crc extends past data end, use `crcall` option\n");
-
 				unsigned short crc = 0xffff;
-
-				for (int i = lo; i < lo + crcLen; ++i)
+				for (int i = lo; i < lo + 0x2000; ++i)
 				{
 					crc = updateCRC(memblk[i], crc);
 				}
 
 				fputs("SMB!", output);
 				fwrite(&crc, 2, 1, output);
-				fwrite(&crcLen, 2, 1, output);
-				int offs = ftell(output);
-				for (int i = 0; i < 512-offs; ++i)
+
+				crc = 0xffff;
+				for (int i = lo; i < lo + finalLen; ++i)
 				{
-					fputc(0, output);
+					crc = updateCRC(memblk[i], crc);
 				}
+
+				fwrite(&crc, 2, 1, output);
+				fwrite(&finalLen, 2, 1, output);
+
+				int offs = ftell(output);
+				unsigned char blanks[512] = { 0 };
+
+				fwrite(blanks, offs, 1, output);
 			}
 
 			fwrite(&memblk[lo], 1, finalLen, output);
