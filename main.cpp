@@ -321,7 +321,7 @@ int main(int argc, char** argv)
 				int offs = ftell(output);
 				unsigned char blanks[512] = { 0 };
 
-				fwrite(blanks, offs, 1, output);
+				fwrite(blanks, 1, 512-offs, output);
 			}
 
 			fwrite(&memblk[lo], 1, finalLen, output);
