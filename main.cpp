@@ -241,7 +241,7 @@ int inhx32(const char *filename, unsigned int lwm, unsigned int hwm)
 
 	total_bytes = last - lwm;
 
-	printf("Decoded %08x -> %08x  (Program bytes = %08x or %dKB, lo = 0x%x, hi = 0x%x)\n", (unsigned int)first, (unsigned int)last, total_bytes, ((total_bytes + 1023) / 1024), lwm, hwm);
+	printf("Decoded %08x -> %08x\nProgram bytes = %08x or %dKB\nlo = 0x%x, hi = 0x%x\n", (unsigned int)first, (unsigned int)last, total_bytes, ((total_bytes + 1023) / 1024), lwm, hwm);
 
 	return last;
 }
