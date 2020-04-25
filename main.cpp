@@ -257,7 +257,7 @@ int main(int argc, char** argv)
 
 	if (args.ispresent("-?") || args.ispresent("/?") || args.ispresent("?"))
 	{
-		printf("hex2bin V1.1\n\n");
+		printf("ihexdump V1.1\n\n");
 		printf("Usage:\n");
 		printf("ihexdump {src hex file} (out={dst bin file}) (lo={(0x)n}) (hi={(0x)n}) (raw)\n\n");
 		printf("  out=   : target filename (default = {source name}.bin\n");
