@@ -331,11 +331,11 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			error(ERR_DESTFILE, "file open failed [%s]\n", outName.c_str());
+			return error(ERR_DESTFILE, "file open failed [%s]\n", outName.c_str());
 		}
 	}
 	else
 	{
-		error(ERR_CONVERSION, "conversion failed\n");
+		return error(ERR_CONVERSION, "conversion failed\n");
 	}
 }
